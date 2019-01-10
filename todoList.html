@@ -18,7 +18,7 @@
               text: action.text,
               completed: false
             };
-          case "TOOGLE_TODO":
+          case "TOGGLE_TODO":
             if (state.id === action.id) {
               return {
                 ...state,
@@ -40,6 +40,49 @@
             return state;
         }
       };
+
+      const visibilityFilter = (state = "SHOW_ALL", action) => {
+        switch (action.type) {
+          case "SET_VISIBILITY_FILTER":
+            return action.filter;
+          default:
+            return state;
+        }
+      };
+
+      const todoApp = (state = {}, action) => {
+        return {
+          todos: todos(state.todos, action),
+          visibilityFilter: visibilityFilter(state.visibilityFilter, action)
+        };
+      };
+
+      //call
+      const { createStore } = Redux;
+      const store = createStore(todoApp);
+
+      store.dispatch({
+        type: "ADD_TODO",
+        id: 0,
+        text: "Learn Redux"
+      });
+
+      store.dispatch({
+        type: "ADD_TODO",
+        id: 1,
+        text: "Practice Redux"
+      });
+
+      store.dispatch({
+        type: "TOGGLE_TODO",
+        id: 1
+      });
+
+      store.dispatch({
+        type: "SET_VISIBILITY_FILTER",
+        filter: "SHOW_COMPLETED"
+      });
+      console.log(store.getState());
     </script>
   </body>
 </html>
